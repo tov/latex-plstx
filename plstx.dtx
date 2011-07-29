@@ -1,0 +1,974 @@
+% \iffalse meta-comment
+%
+% Copyright (C) 2011 by Jesse A. Tov <tov@ccs.neu.edu>
+% ----------------------------------------------------
+% 
+% This file may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.2
+% of this license or (at your option) any later version.
+% The latest version of this license is in:
+%
+%    http://www.latex-project.org/lppl.txt
+%
+% and version 1.2 or later is part of all distributions of LaTeX 
+% version 1999/12/01 or later.
+%
+% ------------------------------------------------------------------
+% This is a LaTeX package to make it easy to refer to nested labels
+% using both an outer number (such as a theorem number) and an inner
+% number (such as an item in an enumeration).
+% ------------------------------------------------------------------
+%
+%   *** The package file:
+%<package>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+%<package>\ProvidesPackage{plstx}
+%<package> [2011/03/26 v0.2 (grammars for programming language syntax)]
+%
+%   *** The driver file:
+%<driver>\NeedsTeXFormat{LaTeX2e}
+%
+%   *** date, version, and stuff:
+%\fi
+%\ProvidesFile{plstx}
+%  [2011/03/26 v0.2 (grammars for programming language syntax)]
+% \changes{v0.2}{2011/03/30}{Included listproc.sty}
+% \changes{v0.1}{2011/03/26}{Initial documented release}
+%
+% \CheckSum{505}
+% \CharacterTable
+%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%   Digits        \0\1\2\3\4\5\6\7\8\9
+%   Exclamation   \!     Double quote  \"     Hash (number) \#
+%   Dollar        \$     Percent       \%     Ampersand     \&
+%   Acute accent  \'     Left paren    \(     Right paren   \)
+%   Asterisk      \*     Plus          \+     Comma         \,
+%   Minus         \-     Point         \.     Solidus       \/
+%   Colon         \:     Semicolon     \;     Less than     \<
+%   Equals        \=     Greater than  \>     Question mark \?
+%   Commercial at \@     Left bracket  \[     Backslash     \\
+%   Right bracket \]     Circumflex    \^     Underscore    \_
+%   Grave accent  \`     Left brace    \{     Vertical bar  \|
+%   Right brace   \}     Tilde         \~}
+%
+% \iffalse
+%
+%<*driver>
+\documentclass{ltxdoc}
+\usepackage{plstx} \relax
+\usepackage{hypdoc}
+\EnableCrossrefs
+\CodelineIndex
+\RecordChanges
+\begin{document}
+  \DocInput{plstx.dtx}
+  \PrintChanges
+  \setcounter{IndexColumns}{2}
+  \PrintIndex
+\end{document}
+%</driver>
+% \fi
+%
+% \GetFileInfo{plstx}
+%
+% \DoNotIndex{\newcommand,\newenvironment,\def,\relax,\do,\@gobble}
+% \DoNotIndex{\if,\ifx,\else,\fi,\providecommand,\let,\global,\ignorespaces}
+% \DoNotIndex{\@undefined,\expandafter,\@for,\@ifnextchar,\addtolength}
+% \DoNotIndex{\aftergroup,\begin,\dp,\ht,\wd,\end,\ifdim}
+% \DoNotIndex{\@firstoftwo,\@secondoftwo,\@notfound,\@tester}
+% \DoNotIndex{\addtocounter,\advance,\edef,\empty,\gdef,\ifnum}
+% \DoNotIndex{\long,\newcounter,\renewcommand,\setcounter,\the,\toksdef}
+% \DoNotIndex{\value,\xdef,\\,\begingroup,\endgroup}
+% 
+% {\catcode`\|=0 \catcode`\\=12
+%  |gdef|bslash{\}}
+% \makeatletter\relax
+%
+% \newcommand{\usemacro}[2][altusage]{\relax
+%   \texttt{\bslash#2}\relax
+%   \indexmacro[#1]{#2}\relax
+% }
+% \newcommand{\defmacro}[2][usage]{\relax
+%   \hypertarget{macro:#2}{\usemacro[#1]{#2}}\relax
+% }
+% \newcommand{\indexmacro}[2][altusage]{\relax
+%   \index{#2=\string\verb!*+\bslash#2+\string|#1}\relax\iffalse!\fi
+% }
+% \newcommand{\useenviron}[2][altusage]{\relax
+%   \texttt{#2}\relax
+%   \indexenviron[#1]{#2}\relax
+% }
+% \newcommand{\defenviron}[2][usage]{\relax
+%   \hypertarget{environ:#2}{\useenviron[#1]{#2}}\relax
+% }
+% \newcommand{\indexenviron}[2][altusage]{\relax
+%   \index{#2={\string\ttfamily\space#2} (environment)\string|#1}\relax
+%   \index{environments:>#2={\string\ttfamily\space#2}\string|#1}\relax
+% }
+% \newcommand{\useoption}[2][altusage]{\relax
+%   \texttt{#2}\relax
+%   \indexoption[#1]{#2}\relax
+% }
+% \newcommand{\seeoption}[2][altusage]{\relax
+%   \hyperlink{option:#2}{\texttt{#2}}\relax
+%   \indexoption[#1]{#2}\relax
+% }
+% \newcommand{\defoption}[2][usage]{\relax
+%   \hypertarget{option:#2}{\useoption[#1]{#2}}\relax
+% }
+% \newcommand{\indexoption}[2][altusage]{\relax
+%   \index{#2={\string\ttfamily\space#2} (configuation option)\string|#1}\relax
+%   \index{configuation options:>#2={\string\ttfamily\space#2}\string|#1}\relax
+% }
+% \newcommand{\useother}[2][altusage]{\relax
+%   \texttt{#2}\relax
+%   \indexother[#1]{#2}\relax
+% }
+% \newcommand{\defother}[2][usage]{\relax
+%   \useother[#1]{#2}\relax
+% }
+% \newcommand{\indexother}[2][usage]{\relax
+%   \index{#2=\string\verb!*+#2+\string|#1}\relax\iffalse!\fi
+% }
+% \newcommand{\altusage}[1]{\emph{(#1)}}
+%
+% {
+% \makeatletter
+% \global\let\doc@old@tabular\tabular
+% \global\def\doctabular{\begingroup\catcode`\|=12\relax\doc@tabular}
+% \global\def\doc@tabular#1{\endgroup\doc@old@tabular{#1}}
+% }
+% \let\enddoctabular\endtabular
+%
+% {
+% \catcode`\|=12\relax
+% \newenvironment{decl}
+%     {\leavevmode\trivlist\item
+%      \begin{tabular}{|l|l|}\hline\ignorespaces}
+%     {\\\hline\end{tabular}\endtrivlist}
+% \global\let\decl\decl
+% \global\let\enddecl\enddecl
+% }
+%
+% \newcounter{macrosenv}
+% \newenvironment{macros}[1]
+%   {\setcounter{macrosenv}{0}
+%    \@for\@each@macro:=#1\do{
+%      \addtocounter{macrosenv}{1}
+%      \expandafter\macro\expandafter{\csname\@each@macro\endcsname}
+%    }}
+%   {\@whilenum\value{macrosenv}>0\do{
+%      \addtocounter{macrosenv}{-1}
+%      \endmacro
+%    }}
+%
+% \title{The \textsf{plstx} package}
+% \author{Jesse A. Tov \\ \texttt{tov@ccs.neu.edu}}
+% \date{This document
+%   corresponds to \textsf{\filename}~\fileversion, dated \filedate.}
+% 
+% \maketitle
+%
+% \tableofcontents
+%
+% \section{Introduction}
+% \label{sec:intro}
+%
+% The purpose of this package is to provide a facility for typesetting
+% grammars for programming language syntax, like this:
+%
+% \begin{quote}
+% \parskip=0pt
+% \begin{plstx}
+%   *(type variables): \alpha [\in] \mathit{TVar} \\
+%   *(variables):      x [\in] \mathit{Var} \\
+%   (types): \tau ::= \alpha | \tau_1 \to \tau_2 | \forall\alpha.\tau \\
+%   (terms): e    ::= x | e_1\,e_2 | \lambda x\colon\tau. e
+%                   | \Lambda\alpha.e | e[\tau] \\
+% \end{plstx}
+% \end{quote}
+% Using the \useenviron{plstx} environment, I coded that like this:
+% \begin{verbatim}
+% \begin{plstx}
+%   *(type variables): \alpha [\in] \mathit{TVar} \\
+%   *(variables):      x [\in] \mathit{Var} \\
+%   (types): \tau ::= \alpha | \tau_1 \to \tau_2 | \forall\alpha.\tau \\
+%   (terms): e    ::= x | e_1\,e_2 | \lambda x\colon\tau. e
+%                   | \Lambda\alpha.e | e[\tau] \\
+% \end{plstx}
+% \end{verbatim}
+%
+% The |plstx| environment allows redefining much of its behavior. For
+% example, if we prefer $\longrightarrow$ to $::=$ in our grammars, we
+% can change the ``is one of'' symbol. Perhaps we also want to change
+% the formatting for the descriptions on the right.
+% \indexmacro{plstxset}
+% \indexoption{is one of}
+% \indexoption{label style}
+% \begin{verbatim}
+%   \plstxset{
+%     is one of=\longrightarrow,
+%     label style=\textsf
+%   }
+% \end{verbatim}
+% Then we get:
+% {
+%   \plstxset{
+%     is one of=\longrightarrow,
+%     label style=\textsf
+%   }
+% \begin{quote}
+% \parskip=0pt
+%   \begin{plstx}
+%     *(type variables): \alpha [\in] \mathit{TVar} \\
+%     *(variables):      x [\in] \mathit{Var} \\
+%     (types): \tau ::= \alpha | \tau_1 \to \tau_2 | \forall\alpha.\tau \\
+%     (terms): e    ::= x | e_1\,e_2 | \lambda x\colon\tau. e
+%                     | \Lambda\alpha.e | e[\tau] \\
+% \end{plstx}
+% \end{quote}
+% }
+%
+% The environment also handles breaking lines when all the productions
+% won't fit on one line, like this:
+% \begin{center}
+% \begin{minipage}{0.5\linewidth}
+%   \parskip=0pt
+%   \begin{plstx}
+%     *(type variables): \alpha [\in] \mathit{TVar} \\
+%     *(variables):      x [\in] \mathit{Var} \\
+%     (types): \tau ::= \alpha | \tau_1 \to \tau_2 | \forall\alpha.\tau \\
+%     (terms): e    ::= x | e_1\,e_2 | \lambda x\colon\tau. e
+%                     | \Lambda\alpha.e | e[\tau] \\
+% \end{plstx}
+% \end{minipage}
+% \end{center}
+%
+% \subsection{Requirements}
+%
+% The \textsf{plstx} package depends on three other packages. Two are a
+% standard part of the \LaTeX{} distribution: \textsf{keyval} and
+% \textsf{calc}.  The third, \textsf{listproc}, is non-standard, and may
+% be obtained at \url{http://www.ccs.neu.edu/~tov/code/latex/}.
+%
+% \section{Command Reference}
+%
+% \begin{decl}
+%  \defmacro{plstxset} \marg{plstx-options}
+% \end{decl}
+% Takes a comma-separated list of keys and values, in the style of
+% \textsf{keyval}:
+% \begin{quote}
+%   \begin{plstx}
+%   \relax: \meta{plstx-options} ::=
+%     \meta{key}_1 \,\texttt=\, \meta{value}_1\texttt, \ldots \texttt,
+%     \meta{key}_k \,\texttt=\, \meta{value}_k [\texttt,]
+%       \\
+%   \end{plstx}
+% \end{quote}
+% The options available are described in \S\ref{sec:options}.
+%
+% \begin{decl}
+%   |\begin{|\defenviron{plstx}|}| \oarg{plstx-options} \\
+%   |  |\meta{plstx-cmd} \ldots \\
+%   |\end{plstx}|
+% \end{decl}
+% The |plstx| environment takes an optional argument, which is a list of
+% options as keys and values, as described in \S\ref{sec:options}.
+% These are the same options that may be provided to
+% \usemacro{plstxset}.
+%
+% The available commands are:
+% \begin{plstx}[rhs style=,one per line]
+%   : \meta{plstx-cmd}
+%     ::= \meta{label-text}\texttt: \meta{nonterm} \defother{::=}
+%           \meta{rhs} \texttt{\bslash\bslash}
+%       | \defother{*} \meta{label-text}\texttt: \meta{nonterm}
+%           \texttt[\meta{sep}\texttt]
+%           \meta{rhs} \texttt{\bslash\bslash}
+%       | \defmacro{set} \marg{plstx-options}
+%       | \defmacro{intertext} \marg{text}
+%       | \defother{[}\meta{dimen}\texttt]
+%   \\
+% \intertext{where}
+%   : \meta{sep}
+%     ::= \meta{is-one-of}
+%       | \meta{is-one-of} \texttt, \meta{continue} \\
+%   : \meta{rhs}
+%     ::= \meta{production}
+%       | \meta{production} {\texttt|} \meta{rhs} \\
+% \end{plstx}
+% If a command starts with |*|, |\set|, |\intertext|, or |[|, then it is
+% taken to be one of those four commands---otherwise, it is treated as
+% the first case, which handles normal nonterminal item.  We'll consider
+% the available commands in order:
+%
+% \vspace{-1.5pc}
+% \begin{quotation}
+% \begin{decl}
+%     \meta{label-text}\texttt: \meta{nonterm} \defother{::=}
+%     \meta{rhs} \texttt{\bslash\bslash}
+% \end{decl}
+% A normal nonterminal item
+% consists of a label \meta{label-text} (which is set on the right, in
+% text mode by default); a non-terminal being
+% defined \meta{nonterm} (which is set on the left, in math mode by
+% default); a separator (option \seeoption{is one of},
+% default $::=$, and written as |::=| in the
+% command even if it has been configured to appear otherwise), and
+% a right-hand side \meta{rhs}, which is a
+% sequence of productions separated by \verb+|+, each set in math mode
+% by default.  The nonterminal and label are set first, and then
+% productions from the right-hand side are added one at a time until
+% there's no more space remaining, at which point it may add
+% continuation lines.
+% \begin{decl}
+%       \defother{*} \meta{label-text}\texttt: \meta{nonterm}
+%           \texttt[\meta{sep}\texttt]
+%           \meta{rhs} \texttt{\bslash\bslash}
+% \end{decl}
+% A special nonterminal item starts with |*|, after which the
+% syntax is the same as a normal nonterminal, with one exception. Rather
+% than write |::=| for the ``is one of'' separator, it expects a
+% separator for use in just that case to appear in square brackets. For
+% example, to get $\alpha \in \mathit{TVar}$ in the example from
+% \S\ref{sec:intro}, I wrote
+% |\alpha [\in] \mathit{TVar}|.  Optionally, the square brackets may
+% contain a second item, after a comma, which indicates the separator to
+% use for continuation lines if the right-hand side wraps.  Writing a
+% special |*| nonterminal item with separator
+% |[::=,\vert]| is equivalent to writing a normal nonterminal.
+% \begin{decl}
+%       \defmacro{set} \marg{plstx-options}
+% \end{decl}
+% This allows changing the options in the middle of a grammar, using the
+% options described in \S\ref{sec:options}. Changes
+% made by |\set| last only until the end of the current
+% |plstx| environment.
+% \begin{decl}
+%       \defmacro{intertext} \marg{text}
+% \end{decl}
+% Escapes from the normal grammar typesetting to allow
+% including arbitrary text between grammar items.  (This is similar to
+% \textsf{amsmath}'s |\intertext| command.)
+% \begin{decl}
+%       \defother{[}\meta{dimen}\texttt]
+% \end{decl}
+% Inserts \meta{dimen} vertical space.
+% \end{quotation}
+%
+% \emph{Note: The grammar for \meta{plstx-cmd} above was written like
+% this:}
+% \begin{verbatim}
+% \begin{plstx}[rhs style=,one per line]
+%   : \meta{plstx-cmd}
+%     ::= \meta{label-text}\texttt: \meta{nonterm} \defother{::=}
+%           \meta{rhs} \texttt{\bslash\bslash}
+%       | \defother{*} \meta{label-text}\texttt: \meta{nonterm}
+%           \texttt[\meta{sep}\texttt]
+%           \meta{rhs} \texttt{\bslash\bslash}
+%       | \defmacro{set} \marg{plstx-options}
+%       | \defmacro{intertext} \marg{text}
+%       | \defother{[}\meta{dimen}\texttt]
+%       | \oarg{dimen}
+%   \\
+% \intertext{where}
+%   : \meta{sep}
+%     ::= \meta{is-one-of}
+%       | \meta{is-one-of} \texttt, \meta{continue} \\
+%   : \meta{rhs}
+%     ::= \meta{production}
+%       | \meta{production} {\defother|} \meta{rhs} \\
+% \end{plstx}
+% \end{verbatim}
+%
+% \subsection{Configuration Options}
+% \label{sec:options}
+%
+% In this section, we document the configuration options that may be
+% passed to \usemacro{plstxset}, \usemacro{set}, or environment
+% \useenviron{plstx}.
+%
+% \newcommand\singlequotearg[1]{`#1'}
+% \newcommand\fmtoptitemlow[3]{\relax
+%   {\normalfont\mbox{}\quad
+%    \makebox[.25\paperwidth]
+%      {#1\relax
+%       \ifx\boolean#2\relax
+%         \hfill\emph{(boolean)}\relax
+%       \else
+%         |=|\meta{#2}\hfill
+%       \fi}\relax
+%    \quad#3}\relax
+% }
+% \newcommand\fmtoptitem[4][\singlequotearg]{\relax
+%   \fmtoptitemlow{\defoption{#2}}{#3}{\emph{default:} #1{#4}}\relax
+% }
+% \newcommand\optitem[4][\singlequotearg]{\relax
+%   \item[{\fmtoptitem[#1]{#2}{#3}{#4}}]
+%   \leavevmode\par
+% }
+% \newcommand\seeoptitem[3]{\relax
+%   \item[{\fmtoptitemlow{\texttt{#1}}{#2}{\emph{see} \seeoption{#3}}}]
+% }
+% \newcommand\optitems[1]{\relax
+%   \item[{\begin{minipage}{\linewidth}\relax
+%     \setlength{\parindent}{0pt}#1\relax
+%   \end{minipage}\relax}]\relax
+%   \leavevmode\par
+% }
+% \newcommand\suboptitem[4][\singlequotearg]{\relax
+%   \fmtoptitem[#1]{#2}{#3}{#4}\ignorespaces
+% }
+%
+% \begin{description}
+%   \optitems{
+%     \suboptitem{align continue}{cs}{\usemacro{plstx@right}} \\
+%     \suboptitem[]{continue center}\boolean{false} \\
+%     \suboptitem[]{continue left}\boolean{false} \\
+%     \suboptitem[]{continue right}\boolean{true}
+%   }
+%    To configure the horizontal alignment of the continuation separator
+%    (see \seeoption{continue}).  The default is to right align it.
+%    It's possible to specify different alignment using one of the
+%    boolean options, or supply a command to format the continuation
+%    separator using |align continue|.
+%   \optitems{
+%     \suboptitem{align is one of}{cs}{\usemacro{plstx@center}} \\
+%     \suboptitem[]{is one of center}\boolean{true} \\
+%     \suboptitem[]{is one of left}\boolean{false} \\
+%     \suboptitem[]{is one of right}\boolean{false}
+%   }
+%    To configure the horizontal alignment of the ``is one of'' separator
+%    (see \seeoption{is one of}).  The default is to center it.
+%   \optitems{
+%     \suboptitem{align nonterm}{cs}{\usemacro{plstx@center}} \\
+%     \suboptitem[]{nonterm center}\boolean{true} \\
+%     \suboptitem[]{nonterm left}\boolean{false} \\
+%     \suboptitem[]{nonterm right}\boolean{false}
+%   }
+%    To configure the horizontal alignment of each nonterminal.
+%    The default is to center them.
+%   \optitem{continue}{text}{\usemacro{vert}}
+%    The ``is one of'' separator for continuation lines in normal grammar items.
+%    When the right-hand side spills onto additional lines, this is used
+%    in the separator column for each additional line.
+%    To change this for just one item, use the |*| command to get a special
+%    grammar item.
+%    The value of |continue| is set in math mode.
+%   \seeoptitem{continue center}\boolean{align continue}
+%   \seeoptitem{continue left}\boolean{align continue}
+%   \seeoptitem{continue right}\boolean{align continue}
+%   \optitems{
+%     \suboptitem{gutter}{dimen}{|4pt|}\\
+%     \suboptitem{gutter left}{dimen}{|4pt|}\\
+%     \suboptitem{gutter right}{dimen}{|4pt|}\\[4pt]
+%     \suboptitem{gutter left text}{text}{\usemacro{kern}|4pt|}\\
+%     \suboptitem{gutter right text}{text}{\usemacro{kern}|4pt|}\\
+%     \suboptitem{gutter text}{text}{\usemacro{kern}|4pt|}
+%   }
+%   These options are for specifying the \emph{gutters}, which are the
+%   space to the left and right of the ``is one of'' separator.  The
+%   |text| versions of the options set exactly what will be placed to
+%   the left or right (or both) of the separator, whereas the non-|text|
+%   versions allow supplying a length to be kerned.  For example, each
+%   of these pairs is equivalent:
+%
+%   \begin{doctabular}{l@{\quad$\equiv$\quad}l}
+%     |gutter left=|\meta{dimen} &  |gutter left text=\kern|\meta{dimen} \\
+%     |gutter right=|\meta{dimen} & |gutter right text=\kern|\meta{dimen} \\
+%     |gutter=|\meta{dimen} &  |gutter left=|\meta{dimen}|,gutter right=|\meta{dimen}
+%   \end{doctabular}
+%   \optitem{is one of}{text}{|::=|}
+%    The separator for normal grammar items.  To change this for just
+%    one item, use the |*| command to get a special grammar item.
+%    The value of |is one of| is set in math mode.
+%   \seeoptitem{is one of center}\boolean{align is one of}
+%   \seeoptitem{is one of left}\boolean{align is one of}
+%   \seeoptitem{is one of right}\boolean{align is one of}
+%   \optitems{
+%      \suboptitem{label skip}{dimen}{|1pc|} \\
+%      \suboptitem{label skip text}{text}{\usemacro{kern}|1pc|}
+%   }
+%    This specifies the space to the left of the label, which separates
+%    the label from the right-hand side. 
+%    Option |label skip text| takes the exact text to put
+%    to the left of (non-empty) labels, whereas |label skip| merely
+%    needs a length.  The latter is defined in terms of the former:
+%    |label skip=|\meta{dimen} $\equiv$ |label skip text=\kern|\meta{dimen}.
+%   \optitem{label style}{cs}{\usemacro{emph}}
+%    Command used to style grammar labels.  Providing this key with no
+%    value sets the option to empty.
+%   \seeoptitem{left margin}{dimen}{margin}
+%   \optitem[]{many per line}{\boolean}{true}
+%    Set as many right-hand side productions as will fit on each line
+%    before wrapping.
+%    This option does not take a value; the opposite
+%    option is \seeoption{one per line}.
+%   \optitems{
+%      \suboptitem{margin}{dimen}{|0pt|} \\
+%      \suboptitem{left margin}{dimen}{|0pt|} \\
+%      \suboptitem{right margin}{dimen}{|0pt|}
+%   }
+%    Sets the margin on one or both sides of the grammar.
+%    This margin applies
+%    only to items (normal and special), not to \usemacro{intertext}.
+%    If no value is supplied, the margin is set to |1em|.
+%   \seeoptitem{nonterm center}\boolean{align nonterm}
+%   \seeoptitem{nonterm left}\boolean{align nonterm}
+%   \seeoptitem{nonterm right}\boolean{align nonterm}
+%   \optitem{nonterm style}{cs}{\usemacro{ensuremath}}
+%    Commands used to style nonterminals.  By default, nonterminals are
+%    set in math mode using |\ensuremath|.
+%    Providing this key with no value sets the option to empty.
+%   \optitem[]{one per line}\boolean{false}
+%    Set only one right-hand side production on each line, regardless of
+%    space.
+%    This option does not take a value; the opposite
+%    option is \seeoption{many per line}.
+%   \optitem{or}{text}{\usemacro{vert}}
+%    Used to separate productions in a right-hand side. Set in math
+%    mode.
+%   \optitems{
+%      \suboptitem{or skip}{dimen}{|4pt|} \\
+%      \suboptitem{or skip text}{text}{\usemacro{kern}|4pt|}
+%   }
+%    This specifies the space around the production separator (option
+%    \seeoption{or}).  Option |or skip text| takes the exact text to put
+%    on each side of the production separator, whereas |or skip| merely
+%    needs a length.  The latter is defined in terms of the former:
+%    |or skip=|\meta{dimen} $\equiv$ |or skip text=\kern|\meta{dimen}.
+%   \optitem{rhs style}{cs}{\usemacro{ensuremath}}
+%    Commands used to style each right-hand side production.
+%    By default, productions are
+%    set in math mode using |\ensuremath|.
+%    Providing this key with no value sets the option to empty.
+%   \seeoptitem{right margin}{dimen}{margin}
+% \iffalse
+% \fi
+% \end{description}
+%
+% \StopEventually{}
+%
+% \section{Implementation}
+%
+% We begin by requiring packages:
+%    \begin{macrocode}
+\RequirePackage{keyval}
+\RequirePackage{calc}
+\RequirePackage{listproc}
+%    \end{macrocode}
+% Set up the configuration options for \textsf{keyval}:
+%    \begin{macrocode}
+\define@key{plstx}{align continue}{\def\plstx@align@continue{#1}}
+\define@key{plstx}{align is one of}{\def\plstx@align@isoneof{#1}}
+\define@key{plstx}{align nonterm}{\def\plstx@align@nonterm{#1}}
+\define@key{plstx}{continue center}[]{\def\plstx@align@continue{\plstx@center}}
+\define@key{plstx}{continue left}[]{\def\plstx@align@continue{\plstx@left}}
+\define@key{plstx}{continue right}[]{\def\plstx@align@continue{\plstx@right}}
+\define@key{plstx}{continue}[]{\def\plstx@continue{#1}}
+\define@key{plstx}{gutter}{%
+  \def\plstx@gutter@left{\kern#1}%
+  \def\plstx@gutter@right{\kern#1}}
+\define@key{plstx}{gutter left text}{\def\plstx@gutter@left{#1}}
+\define@key{plstx}{gutter left}{\def\plstx@gutter@left{\kern#1}}
+\define@key{plstx}{gutter right text}{\def\plstx@gutter@right{#1}}
+\define@key{plstx}{gutter right}{\def\plstx@gutter@right{\kern#1}}
+\define@key{plstx}{gutter text}{%
+  \def\plstx@gutter@left{#1}%
+  \def\plstx@gutter@right{#1}}
+\define@key{plstx}{is one of center}[]{\def\plstx@align@isoneof{\plstx@center}}
+\define@key{plstx}{is one of left}[]{\def\plstx@align@isoneof{\plstx@left}}
+\define@key{plstx}{is one of right}[]{\def\plstx@align@isoneof{\plstx@right}}
+\define@key{plstx}{is one of}{\def\plstx@isoneof{#1}}
+\define@key{plstx}{label skip text}{\def\plstx@labelskip{#1}}
+\define@key{plstx}{label skip}{\def\plstx@labelskip{\kern#1}}
+\define@key{plstx}{label style}[]{\def\plstx@label@style{#1}}
+\define@key{plstx}{left margin}[1em]{\def\plstx@margin@left{\kern#1}}
+\define@key{plstx}{many per line}[]{\let\plstx@one@per@line\@secondoftwo}
+\define@key{plstx}{margin}[1em]{%
+  \def\plstx@margin@left{\kern#1}%
+  \def\plstx@margin@right{\kern#1}}
+\define@key{plstx}{nonterm center}[]{\def\plstx@align@nonterm{\plstx@center}}
+\define@key{plstx}{nonterm left}[]{\def\plstx@align@nonterm{\plstx@left}}
+\define@key{plstx}{nonterm right}[]{\def\plstx@align@nonterm{\plstx@right}}
+\define@key{plstx}{nonterm style}[]{\def\plstx@nonterm@style{#1}}
+\define@key{plstx}{one per line}[]{\let\plstx@one@per@line\@firstoftwo}
+\define@key{plstx}{or skip text}{\def\plstx@orskip{#1}}
+\define@key{plstx}{or skip}{\def\plstx@orskip{\kern#1}}
+\define@key{plstx}{or}{\def\plstx@or{#1}}
+\define@key{plstx}{rhs style}[]{\def\plstx@rhs@style{#1}}
+\define@key{plstx}{right margin}[1em]{\def\plstx@margin@right{\kern#1}}
+%    \end{macrocode}
+% \begin{macros}{plstx@set,plstxset}
+% To set configuration options, we delegate to \usemacro{setkeys} from
+% the \textsf{keyval} package.
+%    \begin{macrocode}
+\newcommand*\plstx@set{\setkeys{plstx}}
+\let\plstxset\plstx@set\relax
+%    \end{macrocode}
+% \end{macros}
+% Set the initial options:
+%    \begin{macrocode}
+\plstx@set{
+  continue      = \vert,
+  continue right,
+  gutter        = 4pt,
+  is one of     = {::=},
+  is one of center,
+  label skip    = 1pc,
+  label style   = \emph,
+  many per line,
+  margin        = 0pt,
+  nonterm center,
+  nonterm style = \ensuremath,
+  or            = \vert,
+  or skip       = 4pt,
+  rhs style     = \ensuremath,
+}
+%    \end{macrocode}
+% \begin{macros}{plstx@left,plstx@right,plstx@center}
+% Helper commands for aligning text:
+%    \begin{macrocode}
+\def\plstx@left#1{#1\hfill}
+\def\plstx@right#1{\hfill#1}
+\def\plstx@center#1{\hfill#1\hfill}
+%    \end{macrocode}
+% \end{macros}
+% \begin{macros}{plstx@parseRHS,plstx@parseRHS@loop}
+% The right-hand side is provided by the user delimited by \verb+|+. We
+% need to break it into productions, carefully, in order to line break
+% it as necessary.  Command |\plstx@parseRHS| breaks |#1| into
+% productions and stores them as a list in |#2| It does this by calling
+% |\plstx@parseRHS@loop|, which uses \TeX's argument pattern matching
+% to find each \verb+|+.
+%    \begin{macrocode}
+\newcommand\plstx@parseRHS[2]{%
+  \let#1=\empty
+  \plstx@parseRHS@loop#2|\plstx@parseRHS@stop\plstx@parseRHS@loop{#1}%
+}
+\def\plstx@parseRHS@loop#1|#2\plstx@parseRHS@loop#3{%
+  \SnocTo{#1}{#3}%
+  \ifx#2\plstx@parseRHS@stop
+    \let\plstx@parseRHS@kont=\relax
+  \else
+     \def\plstx@parseRHS@kont{%
+       \plstx@parseRHS@loop#2\plstx@parseRHS@loop{#3}%
+     }%
+  \fi
+  \plstx@parseRHS@kont
+}
+%    \end{macrocode}
+% \end{macros}
+% \begin{macros}{plstx@additem}
+% The |plstx| environment accumulates grammar items in a list, so that
+% it can measure all of them before it chooses the widths of various
+% parts. This macro adds an item to the accumulating list of items.
+%    \begin{macrocode}
+\newcommand\plstx@additem[1]{%
+  \SnocTo{#1}{\plstx@items}%
+}
+%    \end{macrocode}
+% \end{macros}
+% \begin{macros}{plstx@dispatch}
+% This macro is used inside the |plstx| environment to figure out which
+% \meta{plstx-command} comes next. It takes one argument, and then
+% dispatches to the handler for the correct command.  It has to deal
+% with an additional case not mentioned in the user documentation: it
+% detects the control sequences |\end| and |\endplstx| to detect when
+% the environment is ending.  If nothing matches, it dispatches to the
+% normal item parser |\plstx@parseprod|.
+%    \begin{macrocode}
+\def\plstx@dispatch#1{%
+  \ifx#1\end
+    \let\plstx@dispatch@kont\end
+  \else\ifx#1\endplstx
+    \let\plstx@dispatch@kont\endplstx
+  \else\ifx#1\intertext
+    \let\plstx@dispatch@kont\plstx@intertext
+  \else\ifx#1[%
+    \let\plstx@dispatch@kont\plstx@vskip
+  \else\ifx#1\set
+    \let\plstx@dispatch@kont\plstx@set@later
+  \else\ifx#1*%
+    \let\plstx@dispatch@kont\plstx@other
+  \else
+    \def\plstx@dispatch@kont{\plstx@parseprod#1}%
+  \fi\fi\fi\fi\fi\fi
+  \plstx@dispatch@kont
+}
+%    \end{macrocode}
+% \end{macros}
+% \begin{macros}{plstx@parseprod}
+% This is the command handler for normal productions.  Productions are
+% stored in the item list as
+% \marginpar{\hfill\useother{::=}}
+% \begin{quote}
+%   \usemacro{plstx@production}\marg{label-text}\marg{nonterm}\marg{is-one-of}\marg{continue}{\marg{rhs}}
+% \end{quote}
+% It then calls back to \usemacro{plstx@dispatch} to have it figure out
+% the next command.
+%    \begin{macrocode}
+\def\plstx@parseprod#1:#2::=#3\\{%
+  \plstx@additem{\plstx@production{#1}{#2}{\plstx@isoneof}{\plstx@continue}{#3}}%
+  \plstx@dispatch%
+}
+%    \end{macrocode}
+% \end{macros}
+% \begin{macros}{plstx@other}
+% The command handler for special grammar items. Almost all the
+% complexity is about figuring out whether the separator(s) in the
+% \marginpar{\hfill\useother{*}}
+% square brackets are a single separator to use for both ``is one of''
+% and ``continuation'' separators, or two with a comma in between.
+%    \begin{macrocode}
+\def\plstx@other#1:#2[#3]#4\\{%
+  \let\plstx@other@isoneof\plstx@isoneof
+  \let\plstx@other@continue\plstx@continue
+  \def\plstx@other@todo##1{%
+    \def\plstx@other@isoneof{##1}%
+    \def\plstx@other@continue{##1}%
+    \def\plstx@other@todo####1{%
+      \def\plstx@other@continue{####1}%
+    }%
+  }%
+  \@for\plstx@each:=#3\do{%
+    \expandafter\plstx@other@todo\expandafter{\plstx@each}%
+  }%
+  \def\plstx@other@addthis##1##2{%
+    \plstx@additem{\plstx@production{#1}{#2}{##1}{##2}{#4}}%
+  }%
+  \expandafter\expandafter\expandafter\plstx@other@addthis
+  \expandafter\expandafter
+    \expandafter{\expandafter\plstx@other@isoneof\expandafter}%
+    \expandafter{\plstx@other@continue}%
+  \let\plstx@other@isoneof\@undefined
+  \let\plstx@other@continue\@undefined
+  \let\plstx@other@todo\@undefined
+  \let\plstx@other@addthis\@undefined
+  \plstx@dispatch
+}
+%    \end{macrocode}
+% \end{macros}
+% \begin{macros}{intertext,plstx@intertext}
+% Intertext is added to the item list as
+% \begin{quote}
+% \usemacro{plstx@intertext}\marg{text}
+% \end{quote}
+%    \begin{macrocode}
+\def\plstx@intertext#1{%
+  \plstx@additem{\plstx@intertext{#1}}%
+  \plstx@dispatch%
+}
+%    \end{macrocode}
+% \end{macros}
+% \begin{macros}{plstx@vskip}
+% To add vertical space, we add
+% \begin{quote}
+%   \usemacro{plstx@later}|{|\usemacro{vskip}\meta{dimen}|}|
+% \marginpar{\hfill\useother{[}\meta{dimen}\texttt{]}}
+% \end{quote}
+% to the list of items.
+%    \begin{macrocode}
+\def\plstx@vskip#1]{\plstx@additem{\plstx@later{\vskip#1}}\plstx@dispatch}
+%    \end{macrocode}
+% \end{macros}
+% \begin{macros}{set,plstx@set@later}
+% For |\set|, we add \usemacro{plstx@set}\marg{plstx-options} directly
+% to the list of grammar items.
+%    \begin{macrocode}
+\def\plstx@set@later#1{\plstx@additem{\plstx@set{#1}}\plstx@dispatch}
+%    \end{macrocode}
+% \end{macros}
+% \begin{macros}{plstx@box@a,plstx@box@b,plstx@box@c}
+% We require three boxes: |box@a| is used for labels, |box@b| for the
+% nonterminal and productions, and |box@c| as a temporary box as needed.
+%    \begin{macrocode}
+\newsavebox\plstx@box@a
+\newsavebox\plstx@box@b
+\newsavebox\plstx@box@c
+%    \end{macrocode}
+% \end{macros}
+% \begin{macros}{plstx@maxnt,plstx@maxisoneof,plstx@availwd}
+% We use two dimension registers for calculating the maximum width of
+% the nonterminals and the maximum width of the ``is one of'' and
+% ``continue'' separators. The third dimension register,
+% |\plstx@availwd|, is used to keep track of remaining available width
+% when line breaking the right-hand side.
+%    \begin{macrocode}
+\newlength\plstx@maxnt
+\newlength\plstx@maxisoneof
+\newlength\plstx@availwd
+%    \end{macrocode}
+% \end{macros}
+% \begin{environment}{plstx}
+% The main |plstx| environment.
+%    \begin{macrocode}
+\newenvironment{plstx}[1][]
+  {%
+    \begingroup
+%    \end{macrocode}
+% Make sure that \verb+|+ is recognizable as the production separator:
+%    \begin{macrocode}
+    \catcode`\|=12\relax
+    \plstx@set{#1}%
+%    \end{macrocode}
+% Initialize the list of items as empty. Then call |\plstx@dispatch| to
+% read in the commands in the grammar.
+%    \begin{macrocode}
+    \let\plstx@items\empty
+    \plstx@dispatch
+  }
+  {%
+    \ifx\plstx@items\empty
+      \PackageWarning{plstx}{grammar must have at least one production}%
+    \else
+%    \end{macrocode}
+% For both passes through the list of items, we'll just evaluate the
+% list, so we make |\listitem| a no-op.
+%    \begin{macrocode}
+      \def\plstx@listitem@noop##1{##1\let\listitem\plstx@listitem@noop}%
+      \plstx@listitem@noop\relax%
+%    \end{macrocode}
+% We're going to compute the width of the widest nonterminal and widest
+% ``is one of.''  We do this by defining |\plstx@production| to measure
+% each nonterminal and ``is one of.''  The other grammar item callbacks
+% are defined to do nothing for now.
+%    \begin{macrocode}
+      \setlength{\plstx@maxnt}{0pt}%
+      \setlength{\plstx@maxisoneof}{0pt}%
+      \def\plstx@production##1##2##3##4##5{%
+        \setlength
+          {\global\plstx@maxnt}
+          {\maxof{\plstx@maxnt}{\widthof{\plstx@nonterm@style{##2}}}}%
+        \setlength
+          {\global\plstx@maxisoneof}
+          {\maxof{\plstx@maxisoneof}
+                 {\maxof{\widthof{${##3}$}}
+                        {\widthof{${##4}$}}}}%
+      }%
+      \def\plstx@intertext##1{}%
+      \def\plstx@later##1{}%
+      {\plstx@items}%
+%    \end{macrocode}
+% Now |\plstx@maxnt| is the widest nonterminal.
+%
+% For the second pass, we actually output each item.  We're going to
+% wrap the whole thing in a \usemacro{trivlist}, so we'll precede each
+% line with |\item|. We redefine the grammar item callbacks:
+%    \begin{macrocode}
+      \def\plstx@production##1##2##3##4##5{%
+%    \end{macrocode}
+% The initial available width is the |\linewidth|.  We then add the
+% label to |box@a|, and if the resulting box has non-zero width, we
+% prepend |\plstx@labelskip| to it.  Then, in either case, we postpend
+% the right margin to it.  We update the available width to account for
+% the size of the label and any space around it.
+%    \begin{macrocode}
+        \setlength{\plstx@availwd}{\linewidth}%
+        \sbox\plstx@box@a{\plstx@label@style{##1}}%
+        \ifdim\wd\plstx@box@a>0pt
+          \sbox\plstx@box@a{\plstx@labelskip\usebox\plstx@box@a}%
+        \fi
+        \sbox\plstx@box@a{\usebox\plstx@box@a\plstx@margin@right}%
+        \addtolength{\plstx@availwd}{-\wd\plstx@box@a}%
+%    \end{macrocode}
+% Now we begin with the nonterminal. In |box@b|, we add the left margin,
+% the nonterminal in a box of size |\plstx@maxnt| (formatted and aligned
+% according to the options), the left gutter, the ``is one of''
+% separator, and finally the right gutter.
+%    \begin{macrocode}
+        \sbox\plstx@box@b{%
+          \plstx@margin@left
+          \makebox[\plstx@maxnt]
+            {\plstx@align@nonterm{\plstx@nonterm@style{##2}}}%
+          \plstx@gutter@left
+          \makebox[\plstx@maxisoneof]{\plstx@align@isoneof{${##3}$}}%
+          \plstx@gutter@right
+        }%
+%    \end{macrocode}
+% Parse the right-hand side into a list of productions.
+% We take the first production out of the list, postpend it to
+% |box@b|, and update the available width.
+%    \begin{macrocode}
+        \plstx@parseRHS\plstx@rhsOut{##5}%
+        \LopTo\plstx@rhsOut\plstx@rhsFirst
+        \sbox\plstx@box@b
+          {\usebox\plstx@box@b
+           \plstx@rhs@style{\plstx@rhsFirst}}%
+        \addtolength{\plstx@availwd}{-\wd\plstx@box@b}%
+%    \end{macrocode}
+% Now iterate over the remaining productions.
+%    \begin{macrocode}
+        \@forList\plstx@each:=\plstx@rhsOut\do{%
+%    \end{macrocode}
+% Place the next production in |box@c| along with the production
+% separator.  If option \seeoption{one per line} is set, then we don't
+% need to check, but otherwise, we check whether |box@c| will exceed the
+% available space.
+%    \begin{macrocode}
+          \sbox\plstx@box@c
+            {\plstx@orskip${\plstx@or}$\plstx@orskip
+             \plstx@rhs@style{\plstx@each}}%
+          \plstx@one@per@line
+            {\iftrue}
+            {\ifdim\wd\plstx@box@c>\plstx@availwd}%
+%    \end{macrocode}
+% In this case, either |box@c| won't fit or we're in one-per-line mode.
+% So we stick |box@a| and |box@b| together and output them.
+% Then, to start the next line, we reinitialize |box@a| with the right
+% margin and |box@b| with the ``continue'' separator and the current
+% production.
+%    \begin{macrocode}
+            \item\makebox[\linewidth]
+              {\strut\usebox\plstx@box@b\hfill\usebox\plstx@box@a}
+            \setlength{\plstx@availwd}{\linewidth}%
+            \sbox\plstx@box@a{\plstx@margin@right}%
+            \sbox\plstx@box@b{%
+              \plstx@margin@left
+              \makebox[\plstx@maxnt]{}%
+              \plstx@gutter@left
+              \makebox[\plstx@maxisoneof]{\plstx@align@continue{${##4}$}}%
+              \plstx@gutter@right
+              \plstx@rhs@style{\plstx@each}%
+            }%
+            \addtolength{\plstx@availwd}{-\wd\plstx@box@b}%
+          \else
+%    \end{macrocode}
+% Otherwise, we add |box@c| to |box@b| and update the available width.
+%    \begin{macrocode}
+            \addtolength{\plstx@availwd}{-\wd\plstx@box@c}%
+            \sbox\plstx@box@b{\usebox\plstx@box@b\usebox\plstx@box@c}%
+          \fi
+        }% end \do
+%    \end{macrocode}
+% When we've iterated through all the productions, we flush |box@b| if
+% it isn't empty:
+%    \begin{macrocode}
+        \ifdim\wd\plstx@box@b>0pt
+          \item\makebox[\linewidth]
+            {\strut\usebox\plstx@box@b\hfill\usebox\plstx@box@a}
+        \fi
+      }%
+%    \end{macrocode}
+% That's the end of the main grammar item callback.
+%
+% For |\intertext|, we merely drop the text in a fresh |\item|. For
+% items delayed with |\plstx@later|, we evaluate them as is.
+%    \begin{macrocode}
+      \def\plstx@intertext##1{%
+        \item\strut\ignorespaces##1%
+      }%
+      \def\plstx@later##1{##1}%
+%    \end{macrocode}
+% Finally, we evaluate the list of grammar items in a |\trivlist|:
+%    \begin{macrocode}
+      \trivlist{\plstx@items}\endtrivlist
+    \fi
+    \endgroup
+  }
+%    \end{macrocode}
+% \end{environment}
+%
+% \Finale
+\endinput
