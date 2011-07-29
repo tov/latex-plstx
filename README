@@ -1,26 +1,38 @@
 The plstx Package
 
-To build the PDF documentation and style file, merely run
+DEPENDENCIES
 
-    % make
+    listproc: http://www.ccs.neu.edu/home/tov/code/latex/#listproc
 
-If you don't have make, it's possible to do it manually.  To create the
-style file (plstx.sty) and the documentation (plstx.pdf), run the
-following sequence of commands:
+SYNOPSIS
 
-    latex plstx.ins
-    latex plstx.dtx
-    makeindex -s gind.ist plstx.idx
-    makeindex -s gglo.ist -o plstx.gls plstx.glo
-    latex plstx.dtx
-    pdflatex plstx.dtx
+    This package provides a configurable environment plstx for
+    high-quality typesetting of grammars for programming language
+    theory.
 
-If you only want to build the style file, and not the documentation,
-only the first command (latex plstx.ins) is necessary.
+BUILDING
 
-The documentation is also available on the web at
-http://www.ccs.neu.edu/home/tov/code/latex/
+    To build the PDF documentation and style file, merely run
+
+        % make
+
+    If you don't have make, it's possible to do it manually.  To create
+    the style file (plstx.sty) and the documentation (plstx.pdf), run
+    the following sequence of commands:
+
+        latex plstx.ins
+        latex plstx.dtx
+        makeindex -s gind.ist plstx.idx
+        makeindex -s gglo.ist -o plstx.gls plstx.glo
+        latex plstx.dtx
+        pdflatex plstx.dtx
+
+    If you only want to build the style file, and not the documentation,
+    only the first command (latex plstx.ins) is necessary.
+
+    The documentation is also available on the web at
+    http://www.ccs.neu.edu/home/tov/code/latex/
 
 Jesse A. Tov
 tov@ccs.neu.edu
-Fri Jul 29 15:41:15 EDT 2011
+Fri, 29 Jul 2011 15:50:04 -0400
